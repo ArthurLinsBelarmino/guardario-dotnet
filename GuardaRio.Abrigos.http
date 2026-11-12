@@ -1,0 +1,123 @@
+### GuardaRio · Módulo de Abrigos (.NET)
+### Rode na ordem. Abra no VS Code (extensão REST Client) ou no Visual Studio / Rider.
+@base = http://localhost:5080
+
+### 1. Criar área de risco -> 201
+POST {{base}}/api/areas
+Content-Type: application/json
+
+{
+  "nome": "Jardim Pantanal",
+  "cidade": "São Paulo",
+  "uf": "SP",
+  "populacaoEstimada": 45000
+}
+
+### 2. Listar áreas -> 200
+GET {{base}}/api/areas
+
+### 3. Criar abrigo (aceita pets e acessível) -> 201, status ABERTO
+POST {{base}}/api/abrigos
+Content-Type: application/json
+
+{
+  "nome": "EMEF Jardim Pantanal",
+  "endereco": "Rua das Garças, 120 - Jardim Pantanal",
+  "capacidade": 120,
+  "ocupacao": 30,
+  "aceitaPets": true,
+  "acessivelPcd": true,
+  "fechado": false,
+  "areaRiscoId": 1
+}
+
+### 4. Buscar abrigo por id -> 200
+GET {{base}}/api/abrigos/1
+
+### 5. Filtro do app: tem vaga e aceita pets -> 200
+GET {{base}}/api/abrigos?aceitaPets=true&somenteComVaga=true
+
+### 6. Atualizar: abrigo chega na capacidade -> 204 (status vira LOTADO)
+PUT {{base}}/api/abrigos/1
+Content-Type: application/json
+
+{
+  "nome": "EMEF Jardim Pantanal",
+  "endereco": "Rua das Garças, 120 - Jardim Pantanal",
+  "capacidade": 120,
+  "ocupacao": 120,
+  "aceitaPets": true,
+  "acessivelPcd": true,
+  "fechado": false,
+  "areaRiscoId": 1
+}
+
+### 7. Criar necessidade de doação -> 201
+POST {{base}}/api/necessidades
+Content-Type: application/json
+
+{
+  "item": "Água potável (litros)",
+  "quantidadeNecessaria": 500,
+  "quantidadeRecebida": 120,
+  "urgente": true,
+  "abrigoId": 1
+}
+
+### 8. Necessidades de um abrigo (relação 1:N) -> 200
+GET {{base}}/api/abrigos/1/necessidades
+
+### 9. Atualizar necessidade -> 204
+PUT {{base}}/api/necessidades/1
+Content-Type: application/json
+
+{
+  "item": "Água potável (litros)",
+  "quantidadeNecessaria": 500,
+  "quantidadeRecebida": 500,
+  "urgente": false,
+  "abrigoId": 1
+}
+
+### ---------- ERROS TRATADOS ----------
+
+### 10. POST inválido -> 400 (campos vazios + ocupação > capacidade)
+POST {{base}}/api/abrigos
+Content-Type: application/json
+
+{
+  "nome": "",
+  "endereco": "x",
+  "capacidade": 10,
+  "ocupacao": 50,
+  "areaRiscoId": 1
+}
+
+### 11. Área inexistente -> 400
+POST {{base}}/api/abrigos
+Content-Type: application/json
+
+{
+  "nome": "Ginásio Teste",
+  "endereco": "Av. Exemplo, 1000",
+  "capacidade": 50,
+  "ocupacao": 0,
+  "areaRiscoId": 999
+}
+
+### 12. Id inexistente -> 404
+GET {{base}}/api/abrigos/999
+
+### 13. Excluir área com abrigos -> 409
+DELETE {{base}}/api/areas/1
+
+### ---------- LIMPEZA ----------
+
+### 14. Excluir necessidade -> 204
+DELETE {{base}}/api/necessidades/1
+
+### 15. Excluir abrigo -> 204
+DELETE {{base}}/api/abrigos/1
+
+### 16. Excluir área (agora sem abrigos) -> 204
+DELETE {{base}}/api/areas/1
