@@ -1,8 +1,10 @@
 ### GuardaRio · Módulo de Abrigos (.NET)
-### Rode na ordem. Abra no VS Code (extensão REST Client) ou no Visual Studio / Rider.
+### Rode na ordem (REST Client do VS Code). Os ids são pegos das respostas,
+### então o roteiro funciona quantas vezes você quiser rodar.
 @base = http://localhost:5080
 
 ### 1. Criar área de risco -> 201
+# @name area
 POST {{base}}/api/areas
 Content-Type: application/json
 
@@ -13,10 +15,14 @@ Content-Type: application/json
   "populacaoEstimada": 45000
 }
 
+###
+@areaId = {{area.response.body.$.id}}
+
 ### 2. Listar áreas -> 200
 GET {{base}}/api/areas
 
 ### 3. Criar abrigo (aceita pets e acessível) -> 201, status ABERTO
+# @name abrigo
 POST {{base}}/api/abrigos
 Content-Type: application/json
 
@@ -28,17 +34,20 @@ Content-Type: application/json
   "aceitaPets": true,
   "acessivelPcd": true,
   "fechado": false,
-  "areaRiscoId": 1
+  "areaRiscoId": {{areaId}}
 }
 
+###
+@abrigoId = {{abrigo.response.body.$.id}}
+
 ### 4. Buscar abrigo por id -> 200
-GET {{base}}/api/abrigos/1
+GET {{base}}/api/abrigos/{{abrigoId}}
 
 ### 5. Filtro do app: tem vaga e aceita pets -> 200
 GET {{base}}/api/abrigos?aceitaPets=true&somenteComVaga=true
 
 ### 6. Atualizar: abrigo chega na capacidade -> 204 (status vira LOTADO)
-PUT {{base}}/api/abrigos/1
+PUT {{base}}/api/abrigos/{{abrigoId}}
 Content-Type: application/json
 
 {
@@ -49,10 +58,11 @@ Content-Type: application/json
   "aceitaPets": true,
   "acessivelPcd": true,
   "fechado": false,
-  "areaRiscoId": 1
+  "areaRiscoId": {{areaId}}
 }
 
 ### 7. Criar necessidade de doação -> 201
+# @name necessidade
 POST {{base}}/api/necessidades
 Content-Type: application/json
 
@@ -61,14 +71,17 @@ Content-Type: application/json
   "quantidadeNecessaria": 500,
   "quantidadeRecebida": 120,
   "urgente": true,
-  "abrigoId": 1
+  "abrigoId": {{abrigoId}}
 }
 
+###
+@necessidadeId = {{necessidade.response.body.$.id}}
+
 ### 8. Necessidades de um abrigo (relação 1:N) -> 200
-GET {{base}}/api/abrigos/1/necessidades
+GET {{base}}/api/abrigos/{{abrigoId}}/necessidades
 
 ### 9. Atualizar necessidade -> 204
-PUT {{base}}/api/necessidades/1
+PUT {{base}}/api/necessidades/{{necessidadeId}}
 Content-Type: application/json
 
 {
@@ -76,7 +89,7 @@ Content-Type: application/json
   "quantidadeNecessaria": 500,
   "quantidadeRecebida": 500,
   "urgente": false,
-  "abrigoId": 1
+  "abrigoId": {{abrigoId}}
 }
 
 ### ---------- ERROS TRATADOS ----------
@@ -90,7 +103,7 @@ Content-Type: application/json
   "endereco": "x",
   "capacidade": 10,
   "ocupacao": 50,
-  "areaRiscoId": 1
+  "areaRiscoId": {{areaId}}
 }
 
 ### 11. Área inexistente -> 400
@@ -102,22 +115,22 @@ Content-Type: application/json
   "endereco": "Av. Exemplo, 1000",
   "capacidade": 50,
   "ocupacao": 0,
-  "areaRiscoId": 999
+  "areaRiscoId": 999999
 }
 
 ### 12. Id inexistente -> 404
-GET {{base}}/api/abrigos/999
+GET {{base}}/api/abrigos/999999
 
 ### 13. Excluir área com abrigos -> 409
-DELETE {{base}}/api/areas/1
+DELETE {{base}}/api/areas/{{areaId}}
 
-### ---------- LIMPEZA ----------
+### ---------- LIMPEZA (opcional: rode só se quiser apagar tudo) ----------
 
 ### 14. Excluir necessidade -> 204
-DELETE {{base}}/api/necessidades/1
+DELETE {{base}}/api/necessidades/{{necessidadeId}}
 
 ### 15. Excluir abrigo -> 204
-DELETE {{base}}/api/abrigos/1
+DELETE {{base}}/api/abrigos/{{abrigoId}}
 
 ### 16. Excluir área (agora sem abrigos) -> 204
-DELETE {{base}}/api/areas/1
+DELETE {{base}}/api/areas/{{areaId}}
