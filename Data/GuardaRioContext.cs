@@ -1,4 +1,4 @@
-using GuardaRio.Abrigos.Models;
+﻿using GuardaRio.Abrigos.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace GuardaRio.Abrigos.Data;
@@ -16,7 +16,7 @@ public class GuardaRioContext : DbContext
         modelBuilder.Entity<AreaRisco>(e =>
         {
             e.ToTable("TB_GR_AREA");
-            e.HasKey(a => a.Id).HasName("PK_GR_AREA");
+            e.HasKey(a => a.Id).HasName("PK_GRN_AREA");
             e.Property(a => a.Id).HasColumnName("ID");
             e.Property(a => a.Nome).HasColumnName("NOME").HasMaxLength(100).IsRequired();
             e.Property(a => a.Cidade).HasColumnName("CIDADE").HasMaxLength(80).IsRequired();
@@ -28,16 +28,16 @@ public class GuardaRioContext : DbContext
         {
             e.ToTable("TB_GR_ABRIGO", t =>
             {
-                t.HasCheckConstraint("CK_GR_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
+                t.HasCheckConstraint("CK_GRN_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
             });
-            e.HasKey(a => a.Id).HasName("PK_GR_ABRIGO");
+            e.HasKey(a => a.Id).HasName("PK_GRN_ABRIGO");
             e.Property(a => a.Id).HasColumnName("ID");
             e.Property(a => a.Nome).HasColumnName("NOME").HasMaxLength(100).IsRequired();
             e.Property(a => a.Endereco).HasColumnName("ENDERECO").HasMaxLength(200).IsRequired();
             e.Property(a => a.Capacidade).HasColumnName("CAPACIDADE");
             e.Property(a => a.Ocupacao).HasColumnName("OCUPACAO");
-            e.Property(a => a.AceitaPets).HasColumnName("ACEITA_PETS");
-            e.Property(a => a.AcessivelPcd).HasColumnName("ACESSIVEL_PCD");
+            e.Property(a => a.AceitaPets).HasColumnName("ACEITA_PETS").HasConversion<int>().HasColumnType("NUMBER(1)");
+            e.Property(a => a.AcessivelPcd).HasColumnName("ACESSIVEL_PCD").HasConversion<int>().HasColumnType("NUMBER(1)");
             e.Property(a => a.Status).HasColumnName("STATUS").HasConversion<string>().HasMaxLength(10);
             e.Property(a => a.AreaRiscoId).HasColumnName("AREA_ID");
             e.Ignore(a => a.VagasDisponiveis);
@@ -45,26 +45,28 @@ public class GuardaRioContext : DbContext
             e.HasOne(a => a.AreaRisco)
              .WithMany(ar => ar.Abrigos)
              .HasForeignKey(a => a.AreaRiscoId)
-             .HasConstraintName("FK_GR_ABRIGO_AREA")
+             .HasConstraintName("FK_GRN_ABRIGO_AREA")
              .OnDelete(DeleteBehavior.Restrict);
         });
 
         modelBuilder.Entity<NecessidadeAbrigo>(e =>
         {
             e.ToTable("TB_GR_NECESSIDADE");
-            e.HasKey(n => n.Id).HasName("PK_GR_NECESSIDADE");
+            e.HasKey(n => n.Id).HasName("PK_GRN_NECESSIDADE");
             e.Property(n => n.Id).HasColumnName("ID");
             e.Property(n => n.Item).HasColumnName("ITEM").HasMaxLength(80).IsRequired();
             e.Property(n => n.QuantidadeNecessaria).HasColumnName("QTD_NECESSARIA");
             e.Property(n => n.QuantidadeRecebida).HasColumnName("QTD_RECEBIDA");
-            e.Property(n => n.Urgente).HasColumnName("URGENTE");
+            e.Property(n => n.Urgente).HasColumnName("URGENTE").HasConversion<int>().HasColumnType("NUMBER(1)");
             e.Property(n => n.AbrigoId).HasColumnName("ABRIGO_ID");
 
             e.HasOne(n => n.Abrigo)
              .WithMany(a => a.Necessidades)
              .HasForeignKey(n => n.AbrigoId)
-             .HasConstraintName("FK_GR_NECESSIDADE_ABRIGO")
+             .HasConstraintName("FK_GRN_NECESSIDADE_ABRIGO")
              .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }
+
+

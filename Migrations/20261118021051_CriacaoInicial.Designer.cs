@@ -11,7 +11,7 @@ using Oracle.EntityFrameworkCore.Metadata;
 namespace GuardaRio.Abrigos.Migrations
 {
     [DbContext(typeof(GuardaRioContext))]
-    [Migration("20261112203946_CriacaoInicial")]
+    [Migration("20261118021051_CriacaoInicial")]
     partial class CriacaoInicial
     {
         /// <inheritdoc />
@@ -33,12 +33,12 @@ namespace GuardaRio.Abrigos.Migrations
 
                     OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<bool>("AceitaPets")
-                        .HasColumnType("BOOLEAN")
+                    b.Property<int>("AceitaPets")
+                        .HasColumnType("NUMBER(1)")
                         .HasColumnName("ACEITA_PETS");
 
-                    b.Property<bool>("AcessivelPcd")
-                        .HasColumnType("BOOLEAN")
+                    b.Property<int>("AcessivelPcd")
+                        .HasColumnType("NUMBER(1)")
                         .HasColumnName("ACESSIVEL_PCD");
 
                     b.Property<int>("AreaRiscoId")
@@ -72,13 +72,13 @@ namespace GuardaRio.Abrigos.Migrations
                         .HasColumnName("STATUS");
 
                     b.HasKey("Id")
-                        .HasName("PK_GR_ABRIGO");
+                        .HasName("PK_GRN_ABRIGO");
 
                     b.HasIndex("AreaRiscoId");
 
                     b.ToTable("TB_GR_ABRIGO", null, t =>
                         {
-                            t.HasCheckConstraint("CK_GR_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
+                            t.HasCheckConstraint("CK_GRN_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
                         });
                 });
 
@@ -114,7 +114,7 @@ namespace GuardaRio.Abrigos.Migrations
                         .HasColumnName("UF");
 
                     b.HasKey("Id")
-                        .HasName("PK_GR_AREA");
+                        .HasName("PK_GRN_AREA");
 
                     b.ToTable("TB_GR_AREA", (string)null);
                 });
@@ -146,12 +146,12 @@ namespace GuardaRio.Abrigos.Migrations
                         .HasColumnType("NUMBER(10)")
                         .HasColumnName("QTD_RECEBIDA");
 
-                    b.Property<bool>("Urgente")
-                        .HasColumnType("BOOLEAN")
+                    b.Property<int>("Urgente")
+                        .HasColumnType("NUMBER(1)")
                         .HasColumnName("URGENTE");
 
                     b.HasKey("Id")
-                        .HasName("PK_GR_NECESSIDADE");
+                        .HasName("PK_GRN_NECESSIDADE");
 
                     b.HasIndex("AbrigoId");
 
@@ -165,7 +165,7 @@ namespace GuardaRio.Abrigos.Migrations
                         .HasForeignKey("AreaRiscoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
-                        .HasConstraintName("FK_GR_ABRIGO_AREA");
+                        .HasConstraintName("FK_GRN_ABRIGO_AREA");
 
                     b.Navigation("AreaRisco");
                 });
@@ -177,7 +177,7 @@ namespace GuardaRio.Abrigos.Migrations
                         .HasForeignKey("AbrigoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("FK_GR_NECESSIDADE_ABRIGO");
+                        .HasConstraintName("FK_GRN_NECESSIDADE_ABRIGO");
 
                     b.Navigation("Abrigo");
                 });

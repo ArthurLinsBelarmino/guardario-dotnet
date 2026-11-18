@@ -23,7 +23,7 @@ namespace GuardaRio.Abrigos.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GR_AREA", x => x.ID);
+                    table.PrimaryKey("PK_GRN_AREA", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -36,17 +36,17 @@ namespace GuardaRio.Abrigos.Migrations
                     ENDERECO = table.Column<string>(type: "NVARCHAR2(200)", maxLength: 200, nullable: false),
                     CAPACIDADE = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     OCUPACAO = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    ACEITA_PETS = table.Column<bool>(type: "BOOLEAN", nullable: false),
-                    ACESSIVEL_PCD = table.Column<bool>(type: "BOOLEAN", nullable: false),
+                    ACEITA_PETS = table.Column<int>(type: "NUMBER(1)", nullable: false),
+                    ACESSIVEL_PCD = table.Column<int>(type: "NUMBER(1)", nullable: false),
                     STATUS = table.Column<string>(type: "NVARCHAR2(10)", maxLength: 10, nullable: false),
                     AREA_ID = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GR_ABRIGO", x => x.ID);
-                    table.CheckConstraint("CK_GR_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
+                    table.PrimaryKey("PK_GRN_ABRIGO", x => x.ID);
+                    table.CheckConstraint("CK_GRN_ABRIGO_OCUPACAO", "OCUPACAO BETWEEN 0 AND CAPACIDADE");
                     table.ForeignKey(
-                        name: "FK_GR_ABRIGO_AREA",
+                        name: "FK_GRN_ABRIGO_AREA",
                         column: x => x.AREA_ID,
                         principalTable: "TB_GR_AREA",
                         principalColumn: "ID",
@@ -62,14 +62,14 @@ namespace GuardaRio.Abrigos.Migrations
                     ITEM = table.Column<string>(type: "NVARCHAR2(80)", maxLength: 80, nullable: false),
                     QTD_NECESSARIA = table.Column<int>(type: "NUMBER(10)", nullable: false),
                     QTD_RECEBIDA = table.Column<int>(type: "NUMBER(10)", nullable: false),
-                    URGENTE = table.Column<bool>(type: "BOOLEAN", nullable: false),
+                    URGENTE = table.Column<int>(type: "NUMBER(1)", nullable: false),
                     ABRIGO_ID = table.Column<int>(type: "NUMBER(10)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_GR_NECESSIDADE", x => x.ID);
+                    table.PrimaryKey("PK_GRN_NECESSIDADE", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_GR_NECESSIDADE_ABRIGO",
+                        name: "FK_GRN_NECESSIDADE_ABRIGO",
                         column: x => x.ABRIGO_ID,
                         principalTable: "TB_GR_ABRIGO",
                         principalColumn: "ID",
