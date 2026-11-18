@@ -1,4 +1,4 @@
-using GuardaRio.Abrigos.Data;
+﻿using GuardaRio.Abrigos.Data;
 using GuardaRio.Abrigos.Dtos;
 using GuardaRio.Abrigos.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -71,7 +71,7 @@ public class NecessidadesController : ControllerBase
         if (necessidade is null)
             return NotFound(new ErroResponse($"Necessidade {id} não encontrada."));
 
-        var abrigoExiste = await _context.Abrigos.AnyAsync(a => a.Id == request.AbrigoId);
+        var abrigoExiste = await _context.Abrigos.CountAsync(a => a.Id == request.AbrigoId) > 0;
         if (!abrigoExiste)
             return BadRequest(new ErroResponse($"Abrigo {request.AbrigoId} não existe."));
 
@@ -101,3 +101,4 @@ public class NecessidadesController : ControllerBase
         necessidade.AbrigoId = request.AbrigoId;
     }
 }
+

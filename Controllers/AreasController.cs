@@ -1,4 +1,4 @@
-using GuardaRio.Abrigos.Data;
+﻿using GuardaRio.Abrigos.Data;
 using GuardaRio.Abrigos.Dtos;
 using GuardaRio.Abrigos.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -81,7 +81,7 @@ public class AreasController : ControllerBase
         if (area is null)
             return NotFound(new ErroResponse($"Área de risco {id} não encontrada."));
 
-        var temAbrigos = await _context.Abrigos.AnyAsync(a => a.AreaRiscoId == id);
+        var temAbrigos = await _context.Abrigos.CountAsync(a => a.AreaRiscoId == id) > 0;
         if (temAbrigos)
             return Conflict(new ErroResponse(
                 "Não é possível excluir a área: ainda existem abrigos vinculados a ela."));
@@ -91,3 +91,4 @@ public class AreasController : ControllerBase
         return NoContent();
     }
 }
+
