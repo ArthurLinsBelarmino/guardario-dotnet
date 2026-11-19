@@ -1,4 +1,4 @@
-# GuardaRio · Módulo de Abrigos (.NET)
+﻿# GuardaRio · Módulo de Abrigos (.NET)
 
 > Global Solution 2026/2 · CitizenTech · Advanced Business Development with .NET
 
@@ -81,7 +81,7 @@ Pré-requisitos: [.NET SDK 8](https://dotnet.microsoft.com/download/dotnet/8.0) 
 
 ```bash
 # 1. Clonar e entrar na pasta
-git clone <URL_DO_REPOSITORIO>
+git clone <https://github.com/ArthurLinsBelarmino/guardario-dotnet>
 cd guardario-dotnet
 
 # 2. Instalar a ferramenta do EF Core (uma vez por máquina)
@@ -176,4 +176,4 @@ Exemplos de resposta de erro:
 
 ## Vídeo
 
-Link: <COLOCAR_LINK_DO_YOUTUBE>
+Link: <>
