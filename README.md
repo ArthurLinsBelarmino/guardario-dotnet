@@ -176,4 +176,4 @@ Exemplos de resposta de erro:
 
 ## Vídeo
 
-Link: <https://youtu.be/Z38nvic7scY>
+Link: <https://youtu.be/jJ3jGvbP98Q>
